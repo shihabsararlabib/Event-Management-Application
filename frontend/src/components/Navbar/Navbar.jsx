@@ -6,6 +6,7 @@ function Navbar() {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
   const [darkMode, setDarkMode] = useState(false)
+  const [showUserMenu, setShowUserMenu] = useState(false)
   
   // Check dark mode preference on mount
   useEffect(() => {
@@ -59,7 +60,13 @@ function Navbar() {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     setUser(null)
+    setShowUserMenu(false)
     navigate(ROUTES.Home)
+  }
+
+  const handleNavigation = (route) => {
+    setShowUserMenu(false)
+    navigate(route)
   }
   
   return (
@@ -68,7 +75,7 @@ function Navbar() {
         <div className="flex items-center justify-between">
           <div 
             className="flex items-center gap-3 cursor-pointer group"
-            onClick={() => navigate(ROUTES.Home)}
+            onClick={() => handleNavigation(ROUTES.Home)}
           >
             <img 
               src="/logo192.png" 
@@ -80,21 +87,21 @@ function Navbar() {
             </span>
           </div>
 
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <span 
-              onClick={() => navigate(ROUTES.Home)} 
+              onClick={() => handleNavigation(ROUTES.Home)} 
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer font-medium"
             >
               Home
             </span>
             <span 
-              onClick={() => navigate(ROUTES.Dashboard)} 
+              onClick={() => handleNavigation(ROUTES.Dashboard)} 
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer font-medium"
             >
               Events
             </span>
             <span 
-              onClick={() => navigate(ROUTES.About)} 
+              onClick={() => handleNavigation(ROUTES.About)} 
               className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer font-medium"
             >
               About
@@ -118,54 +125,89 @@ function Navbar() {
             </button>
             
             {user ? (
-              // Logged in state
-              <>
-                <span 
-                  onClick={() => navigate(ROUTES.MyEvents)} 
-                  className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer font-medium"
+              // Logged in state - User menu dropdown
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center gap-2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all"
                 >
-                  My Tickets
-                </span>
-                <span 
-                  onClick={() => navigate(ROUTES.MyCreatedEvents)} 
-                  className="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer font-medium"
-                >
-                  My Events
-                </span>
-                <div className="flex items-center gap-3">
-                  <div className="flex flex-col items-end">
-                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                      {user.firstname} {user.lastname}
-                    </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">{user.email}</span>
-                  </div>
                   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg">
                     {user.firstname?.[0]}{user.lastname?.[0]}
                   </div>
-                </div>
-                <button 
-                  onClick={handleLogout}
-                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
-                >
-                  Logout
+                  <svg className={`w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
                 </button>
-              </>
+
+                {/* Dropdown Menu */}
+                {showUserMenu && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setShowUserMenu(false)}
+                    />
+                    <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                      {/* User Info */}
+                      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                          {user.firstname} {user.lastname}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                      </div>
+
+                      {/* Menu Items */}
+                      <button
+                        onClick={() => handleNavigation(ROUTES.MyEvents)}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors flex items-center gap-3"
+                      >
+                        <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                        </svg>
+                        My Tickets
+                      </button>
+
+                      <button
+                        onClick={() => handleNavigation(ROUTES.MyCreatedEvents)}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors flex items-center gap-3"
+                      >
+                        <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                        </svg>
+                        My Events
+                      </button>
+
+                      {/* Logout */}
+                      <div className="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3"
+                        >
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
+                          </svg>
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             ) : (
               // Logged out state
-              <>
+              <div className="flex items-center gap-3">
                 <button 
-                  onClick={() => navigate(ROUTES.Login)} 
-                  className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 px-6 py-2 font-semibold transition-colors"
+                  onClick={() => handleNavigation(ROUTES.Login)} 
+                  className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 px-4 py-2 font-semibold transition-colors"
                 >
                   Login
                 </button>
                 <button 
-                  onClick={() => navigate(ROUTES.SignUp)} 
+                  onClick={() => handleNavigation(ROUTES.SignUp)} 
                   className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
                 >
                   Sign Up
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>
