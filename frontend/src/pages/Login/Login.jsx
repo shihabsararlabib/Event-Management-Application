@@ -7,7 +7,7 @@ import { ROUTES } from '../../routes/RouterConfig'
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
 const styles = {
-    body: "login__body flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 font-openSans py-12",
+    body: "login__body flex items-center justify-center min-h-screen font-openSans py-12",
     login__container: "login__container flex flex-col items-center justify-around py-[60px] border-0 border-purple-100 px-[30px] bg-white rounded-2xl shadow-2xl m-2 w-[35%] max-w-[420px]",
     login__title: "login__title text-left w-full",
     login__title_h1: "login__title--h1 text-5xl pb-0 font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent",

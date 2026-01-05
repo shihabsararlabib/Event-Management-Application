@@ -9,7 +9,7 @@ import { ROUTES } from '../../routes/RouterConfig'
 import axios from 'axios'
 
 const styles = {
-    body: "signUp_body flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 font-openSans py-12",
+    body: "flex items-center justify-center min-h-screen font-openSans py-12",
     container: "signUp_container flex flex-col items-center justify-around py-[60px] border-0 border-purple-100 px-[30px] bg-white rounded-2xl shadow-2xl m-2 w-[35%] max-w-[425px]",
     title_div: "signUp_title_div text-left w-full",
     title_h1: "text-5xl pb-0 font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent",

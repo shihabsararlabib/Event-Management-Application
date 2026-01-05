@@ -89,7 +89,7 @@ const MyCreatedEvents = () => {
 
   if (loading) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50'>
+      <div className='min-h-screen'>
         <Navbar />
         <div className='max-w-7xl mx-auto px-8 py-12 text-center'>
           <div className='text-7xl mb-6 animate-bounce'>📊</div>

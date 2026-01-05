@@ -7,7 +7,7 @@ const Home = () => {
     const navigate = useNavigate()
 
   return (
-    <div className='Home min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50'>
+    <div className='Home min-h-screen'>
         <Navbar />
         
         {/* Hero Section */}
