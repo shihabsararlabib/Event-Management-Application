@@ -19,7 +19,7 @@ const upload = multer({ storage: storage });
 
 // Create Event with encryption
 export const createEvent = bigPromise(async(req, res, next) => {
-  const userId = req.user.id; // From auth middleware
+  const userId = req.user._id; // From auth middleware
   const { data } = req.body;
   const eventData = JSON.parse(data);
 
@@ -116,7 +116,7 @@ export const getEvent = bigPromise(async(req, res, next) => {
 // Get single event details (with decryption for authorized users)
 export const getEventDetails = bigPromise(async(req, res, next) => {
   const { eventId } = req.params;
-  const userId = req.user?.id;
+  const userId = req.user?._id;
 
   const event = await Events.findById(eventId)
     .populate('createdBy', 'firstname lastname email')
@@ -130,8 +130,8 @@ export const getEventDetails = bigPromise(async(req, res, next) => {
   }
 
   // Check if user is organizer or registered participant
-  const isOrganizer = event.createdBy._id.toString() === userId;
-  const isParticipant = event.participants.some(p => p.userId._id.toString() === userId);
+  const isOrganizer = userId && event.createdBy._id.toString() === userId.toString();
+  const isParticipant = userId && event.participants.some(p => p.userId._id.toString() === userId.toString());
 
   let decryptedData = null;
   if(userId && (isOrganizer || isParticipant)) {
@@ -158,7 +158,7 @@ export const getEventDetails = bigPromise(async(req, res, next) => {
 // Register for an event (generate encrypted ticket)
 export const registerForEvent = bigPromise(async(req, res, next) => {
   const { eventId } = req.params;
-  const userId = req.user.id;
+  const userId = req.user._id;
 
   const event = await Events.findById(eventId);
   if(!event) {
@@ -234,8 +234,8 @@ export const registerForEvent = bigPromise(async(req, res, next) => {
 });
 
 // Get user's registered events with tickets
-export const getMyRegisteredEvents = bigPromise(async(req, res, next) => {
-  const userId = req.user.id;
+export const getUserRegisteredEvents = bigPromise(async (req, res, next) => {
+  const userId = req.user._id;
 
   const events = await Events.find({
     'participants.userId': userId
@@ -296,7 +296,7 @@ export const getMyRegisteredEvents = bigPromise(async(req, res, next) => {
 export const markAttendance = bigPromise(async(req, res, next) => {
   const { eventId } = req.params;
   const { userId: participantId, verificationMethod } = req.body;
-  const organizerId = req.user.id;
+  const organizerId = req.user._id;
 
   const event = await Events.findById(eventId);
   if(!event) {
@@ -307,7 +307,7 @@ export const markAttendance = bigPromise(async(req, res, next) => {
   }
 
   // Verify organizer
-  if(event.createdBy.toString() !== organizerId) {
+  if(event.createdBy.toString() !== organizerId.toString()) {
     return res.status(403).json({
       success: false,
       message: "Only event organizer can mark attendance"
@@ -352,7 +352,7 @@ export const markAttendance = bigPromise(async(req, res, next) => {
 // Get event participants (organizer only)
 export const getEventParticipants = bigPromise(async(req, res, next) => {
   const { eventId } = req.params;
-  const userId = req.user.id;
+  const userId = req.user._id;
 
   const event = await Events.findById(eventId)
     .populate('participants.userId', 'firstname lastname email')
@@ -366,7 +366,7 @@ export const getEventParticipants = bigPromise(async(req, res, next) => {
   }
 
   // Verify organizer
-  if(event.createdBy.toString() !== userId) {
+  if(event.createdBy.toString() !== userId.toString()) {
     return res.status(403).json({
       success: false,
       message: "Only event organizer can view participants"
@@ -399,7 +399,7 @@ export const getEventParticipants = bigPromise(async(req, res, next) => {
 
 // Get my created events (organizer view)
 export const getMyCreatedEvents = bigPromise(async(req, res, next) => {
-  const userId = req.user.id;
+  const userId = req.user._id;
 
   const events = await Events.find({ createdBy: userId })
     .select('-encryptedData -participants.encryptedTicketData');
@@ -415,3 +415,40 @@ export const getMyCreatedEvents = bigPromise(async(req, res, next) => {
   });
 });
 
+// Delete event (organizer only)
+export const deleteEvent = bigPromise(async(req, res, next) => {
+  const { eventId } = req.params;
+  const userId = req.user._id;
+
+  const event = await Events.findById(eventId);
+  
+  if(!event) {
+    return res.status(404).json({
+      success: false,
+      message: "Event not found"
+    });
+  }
+
+  // Verify organizer
+  if(event.createdBy.toString() !== userId.toString()) {
+    return res.status(403).json({
+      success: false,
+      message: "Only event organizer can delete this event"
+    });
+  }
+
+  // Check if event has participants
+  if(event.participants.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: `Cannot delete event with ${event.participants.length} registered participants. Please contact support.`
+    });
+  }
+
+  await Events.findByIdAndDelete(eventId);
+
+  return res.status(200).json({
+    success: true,
+    message: "Event deleted successfully"
+  });
+});

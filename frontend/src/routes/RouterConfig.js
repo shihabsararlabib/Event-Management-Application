@@ -7,5 +7,9 @@ export const ROUTES = {
     SignUp : '/SignUp',
     Dashboard:'/Dashboard',
     Forgotpassword:'/Forgotpassword',
-    AddEvent : '/AddEvent'
+    AddEvent : '/AddEvent',
+    EventDetails : '/event/:id',
+    MyEvents : '/my-events',
+    MyCreatedEvents : '/my-created-events',
+    Participants : '/event/:id/participants'
 }

@@ -8,6 +8,10 @@ import Login from "../pages/Login/Login"
 import SignUp from '../pages/SignUp/SignUp';
 import forgotPassword from '../pages/Forgotpassword/forgotPassword';
 import AddEvent from '../pages/AddEvent/AddEvent';
+import EventDetails from '../pages/EventDetails/EventDetails';
+import MyEvents from '../pages/MyEvents/MyEvents';
+import MyCreatedEvents from '../pages/MyCreatedEvents/MyCreatedEvents';
+import Participants from '../pages/Participants/Participants';
 const Router = () => {
 
     const RouteWithRole = ({ Element }) => {
@@ -28,6 +32,10 @@ const Router = () => {
             <Route exact path={ROUTES.Dashboard} element={<RouteWithRole Element={Dashboard} />}></Route>
             <Route exact path={ROUTES.Forgotpassword} element={<RouteWithRole Element={forgotPassword} />}></Route>
             <Route exact path={ROUTES.AddEvent} element={<RouteWithRole Element={AddEvent} />}></Route>
+            <Route exact path={ROUTES.EventDetails} element={<RouteWithRole Element={EventDetails} />}></Route>
+            <Route exact path={ROUTES.MyEvents} element={<RouteWithRole Element={MyEvents} />}></Route>
+            <Route exact path={ROUTES.MyCreatedEvents} element={<RouteWithRole Element={MyCreatedEvents} />}></Route>
+            <Route exact path={ROUTES.Participants} element={<RouteWithRole Element={Participants} />}></Route>
         </Routes>
     </div>
   )

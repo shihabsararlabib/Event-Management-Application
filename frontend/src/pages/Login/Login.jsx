@@ -43,7 +43,16 @@ function Login() {
     }).then(res =>{
       console.log(res);
       console.log(res.data);
-        navigate("/dashboard");
+      
+      // Store token and user data in localStorage
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+      }
+      if (res.data.user) {
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+      }
+      
+      navigate("/dashboard");
     }).catch(err=>{
      alert(err);
     })

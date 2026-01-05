@@ -9,9 +9,9 @@ class RSAEncryption {
 
     // Miller-Rabin primality test
     isPrime(n, k = 5) {
-        if (n <= 1) return false;
-        if (n <= 3) return true;
-        if (n % 2 === 0) return false;
+        if (n <= 1n) return false;
+        if (n <= 3n) return true;
+        if (n % 2n === 0n) return false;
 
         // Write n-1 as 2^r * d
         let d = n - 1n;

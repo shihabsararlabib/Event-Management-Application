@@ -385,7 +385,7 @@ export const getLoggedinUserDetails = bigPromise(async (req, res, next) => {
         });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
 
     // Decrypt user data if available
     let decryptedData = null;
@@ -432,7 +432,7 @@ export const changePassword = bigPromise(async (req, res, next) => {
         });
     }
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user._id);
     
     // Verify old password
     const isValid = await user.isValidatedPassword(oldPassword, user.password);
@@ -469,7 +469,7 @@ export const updateUserDetails = bigPromise(async (req, res, next) => {
     if (lastname) newData.lastname = lastname;
     if (email) newData.email = email;
 
-    const updated = await User.findByIdAndUpdate(req.user.id, newData, {
+    const updated = await User.findByIdAndUpdate(req.user._id, newData, {
         new: true,
         runValidators: true
     });
@@ -617,7 +617,7 @@ export const getUserRegisteredEvents = bigPromise(async (req, res, next) => {
         });
     }
 
-    const user = await User.findById(req.user.id).populate('registeredEvents.eventId');
+    const user = await User.findById(req.user._id).populate('registeredEvents.eventId');
 
     res.status(200).json({
         success: true,
