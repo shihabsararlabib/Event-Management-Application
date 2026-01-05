@@ -5,10 +5,11 @@ import Contact from './Forms/Contact/Contact'
 import Navbar from '../../components/Navbar/Navbar'
 
 const styles = {
-    container : "text-lg",
-    form_selector: "flex items-center justify-center text-1xl p-[0.5rem] pt-[0.5rem]  border-solid border-gray-300 border-y-[5px]",
-    form: "",
-    link: "ml-[7rem]"
+    container : "min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50",
+    form_selector: "flex items-center justify-center gap-8 text-lg p-8 bg-white shadow-md border-b-2 border-purple-100",
+    form: "max-w-4xl mx-auto p-8",
+    link: "px-6 py-3 rounded-full font-semibold transition-all hover:bg-purple-100 text-gray-700 hover:text-purple-600",
+    activeLink: "px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg"
 }
 function AddEvent() {
 
@@ -51,10 +52,36 @@ function AddEvent() {
     return (
         <div className={styles.container}>
             <Navbar />
+            <div className="text-center py-12">
+                <h1 className="text-5xl font-bold mb-4">
+                    <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                        Create New Event
+                    </span>
+                </h1>
+                <p className="text-xl text-gray-600">Fill in the details to create your event</p>
+            </div>
             <div className={styles.form_selector}>
-                <a href="" id='basic' onClick={handleForm} className={styles.link}>Basic Details</a>
-                <a href="" id='aboutEvent' onClick={handleForm} className={styles.link}>About Event</a>
-                <a href="" id='contact' onClick={handleForm} className={styles.link}>Contact</a>
+                <button 
+                    id='basic' 
+                    onClick={handleForm} 
+                    className={form === 'basic' ? styles.activeLink : styles.link}
+                >
+                    📝 Basic Details
+                </button>
+                <button 
+                    id='aboutEvent' 
+                    onClick={handleForm} 
+                    className={form === 'aboutEvent' ? styles.activeLink : styles.link}
+                >
+                    📋 About Event
+                </button>
+                <button 
+                    id='contact' 
+                    onClick={handleForm} 
+                    className={form === 'contact' ? styles.activeLink : styles.link}
+                >
+                    📞 Contact
+                </button>
             </div>
             <form className={styles.form}>
                 {form === 'basic' ? <BasicDetails state={details} changeHandler={handleData} /> : ""}

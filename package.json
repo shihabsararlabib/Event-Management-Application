@@ -1,10 +1,13 @@
 {
-  "name": "eventify",
-  "version": "1.0.0",
-  "description": "",
+  "name": "eventshield",
+  "version": "2.0.0",
+  "description": "EventShield - Secure Event Registration & Attendance System with end-to-end encryption, 2FA, and RBAC",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run server & npm run client",
+    "server": "cd server && npm start",
+    "client": "cd frontend && npm start"
   },
   "repository": {
     "type": "git",
@@ -13,9 +16,19 @@
   "keywords": [
     "reactjs",
     "nodejs",
-    "scss"
+    "mongodb",
+    "express",
+    "security",
+    "cryptography",
+    "encryption",
+    "rsa",
+    "ecc",
+    "2fa",
+    "rbac",
+    "event-management",
+    "eventshield"
   ],
-  "author": "priyansh, vaibhav, smita, sitanshu, prasad",
+  "author": "CSE447 Security Team - Based on work by Priyansh, Vaibhav, Smita, Sitanshu, Prasad",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/CatalystsReachOut/Event-Management-Application/issues"

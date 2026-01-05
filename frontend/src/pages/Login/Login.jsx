@@ -7,21 +7,21 @@ import { ROUTES } from '../../routes/RouterConfig'
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
 const styles = {
-    body: "login__body flex items-center justify-center h-screen bg-hero bg-no-repeat bg-cover bg-right-top bg-fixed font-openSans",
-    login__container: "login__container flex flex-col items-center justify-around py-[60px] border-0 border-black px-[30px] bg-white rounded-[8px] shadow-login_shadow m-2 w-[35%] max-w-[420px]",
+    body: "login__body flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50 font-openSans py-12",
+    login__container: "login__container flex flex-col items-center justify-around py-[60px] border-0 border-purple-100 px-[30px] bg-white rounded-2xl shadow-2xl m-2 w-[35%] max-w-[420px]",
     login__title: "login__title text-left w-full",
-    login__title_h1: "login__title--h1 text-5xl pb-0 font-bold",
+    login__title_h1: "login__title--h1 text-5xl pb-0 font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent",
     login__form: "login__form w-full pt-[60px]",
     RemFor_container: "flex justify-between items-center mt-[30px]",
     checkbox__container: "checkbox__container flex items-center",
-    checkbox__box: "accent-font_orange",
-    checkbox__label: "ml-1 checkbox__label",
+    checkbox__box: "accent-purple-600",
+    checkbox__label: "ml-1 checkbox__label text-gray-700",
     forgotPass__conatiner: "ml-auto",
-    forgotPass__link: "forgotPass__link hover:underline hover:decoration-solid ",
-    login__button: "login__button text-center w-full text-2xl font-semibold block mt-[30px] rounded-[8px] border-font_orange py-[10px] text-center bg-font_orange text-white transition-colors hover:bg-font_orange-hover hover:ease-in",
-    signUp__container: "flex mt-[40px]",
+    forgotPass__link: "forgotPass__link hover:underline hover:decoration-solid text-purple-600 hover:text-purple-700",
+    login__button: "login__button text-center w-full text-2xl font-semibold block mt-[30px] rounded-full py-[12px] text-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white transition-all hover:from-purple-700 hover:to-indigo-700 hover:shadow-xl transform hover:scale-105",
+    signUp__container: "flex mt-[40px] text-gray-700",
     signUp__text: "",
-    signup__link: "login__signup pl-2 font-semibold hover:underline hover:decoration-solid"
+    signup__link: "login__signup pl-2 font-semibold hover:underline hover:decoration-solid text-purple-600 hover:text-purple-700"
 }
 
 function Login() {
@@ -37,13 +37,13 @@ function Login() {
         event.preventDefault()
         console.log(loginForm)
 
-        await axios.post('http://localhost:8080/api/login', {
+        await axios.post('http://localhost:8080/api/user/login', {
       email:loginForm.email,
       password:loginForm.password
     }).then(res =>{
       console.log(res);
       console.log(res.data);
-        navigate("/");
+        navigate("/dashboard");
     }).catch(err=>{
      alert(err);
     })

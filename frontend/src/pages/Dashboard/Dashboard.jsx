@@ -1,105 +1,115 @@
 import React from 'react'
-import pic from "../../assets/images/card.png"
-import {card} from "../../components/Card/Card"
 import Card from "../../components/Card/Card"
-import { Select, Option } from "@material-tailwind/react";
-import  "./Dashboard.css"
-import { useState,useEffect } from 'react'
-import { Menu } from '@headlessui/react'
+import Navbar from "../../components/Navbar/Navbar"
+import "./Dashboard.css"
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from "axios"
-const Dashboard= () => {
-  const abc=[
-    {
-      label:"Hi",value:"Hi"
-    }
-  ]
-  const [old,setOld] = useState();
-  const click2 =(item) =>{
-    setOld(item);
-  }
-  const [new1,setNew] = useState();
-  const click1 = (item) =>{
-    setNew(item);
-  }
-  
-  const [month,setMonth] = useState();
-  const click3 = (item) =>{
-    setMonth(item);
-  }
-  const [year,setYear] = useState();
-  const click4=(item) =>{
-    setYear(item);
-    console.log(item);
-  }
 
-  const [eventData,setEventData] = useState([]);
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const [eventData, setEventData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
   
-  const shreyas = async () =>{
-    
-    await axios.get('http://localhost:8080/api/event').then(res =>{
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get('http://localhost:8080/api/event');
       console.log(res);
-      console.log(res.data);
-      setEventData(res.data.data);
-    }).catch(err=>{
-     alert(err);
-    })
+      setEventData(res.data.data || []);
+    } catch (err) {
+      console.error('Error fetching events:', err);
+      setEventData([]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    shreyas()
-  },[]);
+    fetchEvents();
+  }, []);
 
-   return (
-    <div className=' w-100 font-openSans'>
-    <div className='grid lg:grid-cols-3 sm:grid-cols-3 grid-cols-1 x shadow-2xl items-center'>
-    <div className='hover:place-items-center mx-12'>
-    <h3 className='y text-orange-600 font-extrabold text-center'>CLUB</h3>
-    </div>
-    <div class="flex h-24 items-center justify-center ">
-    <div class="flex border-2 z rounded-3xl">
-        <input type="text" className="px-4 z py-2 w-80 rounded-3xl shadow-2xl" placeholder="Search events ..." />
-        <button class="flex items-center justify-center px-4 border-l">
-            <svg class="w-6 h-6 text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path
-                    d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
-            </svg>
-        </button>
-    </div>
-    </div>
-    <div className='flex justify-center'>
-    <Menu as="div" className="relative">
-    <Menu.Button className="px-4 py-2 rounded bg-blue-600 text-white ...">Filter</Menu.Button>
-    <Menu.Items className="absolute mt-1 right-0">
-      <Menu.Item>
-        {({ active }) => (
-          <a className={`${active && 'bg-blue-500 text-white'} ...`}>
-            Account settings
-          </a>
-        )}
-      </Menu.Item>
-      <Menu.Item>
-        {({ active }) => (
-          <a className={`${active && 'bg-blue-500 text-white'} ...`} >
-            Documentation
-          </a>
-        )}
-      </Menu.Item>
-      <Menu.Item disabled>
-        <span className="opacity-75 ...">Invite a friend (coming soon!)</span>
-      </Menu.Item>
-    </Menu.Items>
-  </Menu>
-    </div>
-</div>
+  const filteredEvents = eventData.filter(event => 
+    event.eventName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    event.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    <div className='container py-[60px] m-auto grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5'>
-    {eventData.map((i,key) => (
-      <Card data={i}/>
-     ) 
-     )}
-    </div>
+  return (
+    <div className='min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50'>
+      <Navbar />
+      
+      <div className='max-w-7xl mx-auto px-8 py-12'>
+        <div className='mb-12 text-center'>
+          <h1 className='text-5xl font-bold mb-4'>
+            <span className='bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent'>
+              Discover Events
+            </span>
+          </h1>
+          <p className='text-xl text-gray-600 mb-6'>Find and register for amazing events happening around you</p>
+          <button 
+            onClick={() => navigate('/addevent')}
+            className='bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all transform hover:scale-105'
+          >
+            ➕ Create New Event
+          </button>
+        </div>
+
+        <div className='mb-12 flex justify-center'>
+          <div className="flex border-2 border-purple-200 rounded-full shadow-xl bg-white max-w-3xl w-full overflow-hidden">
+            <input 
+              type="text" 
+              className="px-8 py-4 w-full outline-none text-lg" 
+              placeholder="🔍 Search events by name, category, or description..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button className="flex items-center justify-center px-8 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all">
+              <svg className="w-6 h-6 text-white" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className='text-center py-32'>
+            <div className='text-7xl mb-6 animate-bounce'>🎉</div>
+            <p className='text-2xl font-semibold text-gray-700'>Loading amazing events...</p>
+          </div>
+        ) : filteredEvents.length === 0 ? (
+          <div className='text-center py-32 bg-white rounded-3xl shadow-xl border-2 border-purple-100'>
+            <div className='text-8xl mb-6'>📅</div>
+            <h2 className='text-3xl font-bold text-gray-800 mb-4'>No Events Found</h2>
+            <p className='text-xl text-gray-600 mb-8'>
+              {searchTerm ? 'Try adjusting your search terms or browse all events' : 'Be the first to create an event!'}
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className='mb-8 flex items-center justify-between'>
+              <div className='text-lg text-gray-600 font-medium'>
+                <span className='text-purple-600 font-bold text-2xl'>{filteredEvents.length}</span> event{filteredEvents.length !== 1 ? 's' : ''} available
+              </div>
+              <div className='flex gap-3'>
+                <button className='px-4 py-2 border-2 border-purple-200 rounded-full hover:border-purple-600 hover:text-purple-600 transition-colors font-medium'>
+                  📅 All Categories
+                </button>
+                <button className='px-4 py-2 border-2 border-purple-200 rounded-full hover:border-purple-600 hover:text-purple-600 transition-colors font-medium'>
+                  📍 All Locations
+                </button>
+              </div>
+            </div>
+            <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8'>
+              {filteredEvents.map((event, key) => (
+                <Card key={key} data={event} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }
+
 export default Dashboard;
