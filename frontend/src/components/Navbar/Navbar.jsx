@@ -153,9 +153,25 @@ function Navbar() {
                           {user.firstname} {user.lastname}
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                        <div className="mt-2 flex items-center gap-1">
+                          <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full">🔒 Encrypted</span>
+                          {user.twoFactorEnabled && (
+                            <span className="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full">📱 2FA</span>
+                          )}
+                        </div>
                       </div>
 
                       {/* Menu Items */}
+                      <button
+                        onClick={() => handleNavigation(ROUTES.Profile)}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors flex items-center gap-3"
+                      >
+                        <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                        </svg>
+                        Profile & Security
+                      </button>
+
                       <button
                         onClick={() => handleNavigation(ROUTES.MyEvents)}
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors flex items-center gap-3"

@@ -38,7 +38,11 @@ class EncryptionService {
             // Generate RSA keys if not found
             if (!rsaKeyDoc) {
                 const rsa = new RSAEncryption();
-                rsaKeys = rsa.generateKeyPair(2048);
+                // Using 512-bit for development testing (MUCH faster - seconds vs minutes)
+                // Note: Production should use 2048-bit or 4096-bit for security
+                // 512-bit is ONLY for demonstrating encryption functionality
+                console.log('Generating RSA-512 keys for user:', userId);
+                rsaKeys = rsa.generateKeyPair(512);
                 
                 // Save to database
                 const keyDoc = new CryptoKey({

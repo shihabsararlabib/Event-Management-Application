@@ -52,6 +52,11 @@ export const createUser = bigPromise(async (req, res, next) => {
         await user.save();
     } catch (error) {
         console.error('Error encrypting user data:', error);
+        // Still return error to client for debugging
+        return res.status(400).json({
+            success: false,
+            message: "Error during user data encryption: " + error.message
+        });
     }
 
     // Remove sensitive data from response

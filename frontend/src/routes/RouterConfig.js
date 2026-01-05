@@ -11,5 +11,7 @@ export const ROUTES = {
     EventDetails : '/event/:id',
     MyEvents : '/my-events',
     MyCreatedEvents : '/my-created-events',
-    Participants : '/event/:id/participants'
+    Participants : '/event/:id/participants',
+    Profile : '/profile',
+    Settings : '/settings'
 }

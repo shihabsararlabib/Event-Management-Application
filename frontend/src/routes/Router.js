@@ -12,6 +12,8 @@ import EventDetails from '../pages/EventDetails/EventDetails';
 import MyEvents from '../pages/MyEvents/MyEvents';
 import MyCreatedEvents from '../pages/MyCreatedEvents/MyCreatedEvents';
 import Participants from '../pages/Participants/Participants';
+import Profile from '../pages/Profile/Profile';
+
 const Router = () => {
 
     const RouteWithRole = ({ Element }) => {
@@ -36,6 +38,8 @@ const Router = () => {
             <Route exact path={ROUTES.MyEvents} element={<RouteWithRole Element={MyEvents} />}></Route>
             <Route exact path={ROUTES.MyCreatedEvents} element={<RouteWithRole Element={MyCreatedEvents} />}></Route>
             <Route exact path={ROUTES.Participants} element={<RouteWithRole Element={Participants} />}></Route>
+            <Route exact path={ROUTES.Profile} element={<RouteWithRole Element={Profile} />}></Route>
+            <Route exact path={ROUTES.Settings} element={<RouteWithRole Element={Profile} />}></Route>
         </Routes>
     </div>
   )
